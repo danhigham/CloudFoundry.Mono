@@ -53,6 +53,7 @@
     <Compile Include="Environment.cs" />
     <Compile Include="Tests\EnvironmentTests.cs" />
     <Compile Include="Models\ServiceCredential.cs" />
+    <Compile Include="Models\ApplicationLimits.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -23,10 +23,17 @@ namespace CloudFoundry.Mono
 
 			foreach (var serviceProvider in _topLevel) {
 				foreach (var serviceJSON in serviceProvider)
-					_services.Add(JsonConvert.DeserializeObject<Service> (serviceJSON.ToString ()));
+					_services.Add(JsonConvert.DeserializeObject<Service> 
+						(serviceJSON.ToString ()));
 			};
 
 			return _services;
+		}
+
+		public static Application Application()
+		{
+			var applicationJSON = System.Environment.GetEnvironmentVariable ("VCAP_APPLICATION");
+			return JsonConvert.DeserializeObject<Application> (applicationJSON);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 using System;
-using System.Data.Linq;
+using System.Linq;
 using System.Collections.Generic;
 using CloudFoundry.Mono;
 using CloudFoundry.Mono.Models;
@@ -11,13 +11,13 @@ namespace CloudFoundry.Mono.Tests
 	//Tests for CF Environmental variables
 	public class EnvironmentTests
 	{
-
 		[TestFixtureSetUp()]
 		public void SetUp()
 		{
+
 			System.Environment.SetEnvironmentVariable (
 				"VCAP_SERVICES",
-				"{\"service-n/a\":[{\"name\":\"service-ab123\",\"label\":\"service-n/a\",\"tags\":[],\"plan\":\"entry\",\"credentials\":{\"jdbcUrl\":\"jdbc:mysql://db_username:db_password@somedatabase.com:3306/database_name\",\"uri\":\"mysql://db_username:db_password@somedatabase.com:3306/database_name?reconnect=true\",\"name\":\"database_name\",\"hostname\":\"somedatabase.com\",\"port\":\"3306\",\"username\":\"db_username\",\"password\":\"db_password\"}}]}"
+				"{\"service-n/a\":[{\"name\":\"service-ab123\",\"label\":\"service-n/a\",\"tags\":[\"tag-one\",\"tag-two\"],\"plan\":\"entry\",\"credentials\":{\"jdbcUrl\":\"jdbc:mysql://db_username:db_password@somedatabase.com:3306/database_name\",\"uri\":\"mysql://db_username:db_password@somedatabase.com:3306/database_name?reconnect=true\",\"name\":\"database_name\",\"hostname\":\"somedatabase.com\",\"port\":\"3306\",\"username\":\"db_username\",\"password\":\"db_password\"}}]}"
 			);
 
 			System.Environment.SetEnvironmentVariable (
@@ -35,12 +35,23 @@ namespace CloudFoundry.Mono.Tests
 
 			var service = services.Find (e => e.Name == "service-ab123");
 
+			// Check the service exists
 			Assert.IsNotNull (service);
+
+			// Check the properties
 			Assert.AreEqual (service.Label, "service-n/a");
+			Assert.AreEqual (service.Tags.Length, 2);
+			Assert.AreEqual (service.Plan, "entry");
 
 			Assert.IsInstanceOf<ServiceCredential> (service.Credentials);
 
 			Assert.AreEqual (service.Credentials.JDBCUrl, "jdbc:mysql://db_username:db_password@somedatabase.com:3306/database_name");
+			Assert.AreEqual (service.Credentials.URI, "mysql://db_username:db_password@somedatabase.com:3306/database_name?reconnect=true");
+			Assert.AreEqual (service.Credentials.DatabaseName, "database_name");
+			Assert.AreEqual (service.Credentials.Hostname, "somedatabase.com");
+			Assert.AreEqual (service.Credentials.Port, "3306");
+			Assert.AreEqual (service.Credentials.Username, "db_username");
+			Assert.AreEqual (service.Credentials.Password, "db_password");
 		}
 
 		[Test()]
@@ -53,6 +64,8 @@ namespace CloudFoundry.Mono.Tests
 
 			Assert.IsInstanceOf<String[]> (app.URIs);
 		}
+
+
 	}
 }
 

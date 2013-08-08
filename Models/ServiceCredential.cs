@@ -13,6 +13,10 @@ namespace CloudFoundry.Mono.Models
 		public String URI;
 
 		[DataMember]
+		private String Name;
+		public String DatabaseName { get { return Name; } }
+
+		[DataMember]
 		public String Hostname;
 
 		[DataMember]
